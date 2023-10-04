@@ -7,6 +7,11 @@ export const useProductStore = defineStore("product", {
          loading: false,
          error: null,
       },
+      oneProduct: {
+         data: null,
+         loading: false,
+         error: null
+      }
    }),
    actions: {
       async getAllProducts() {
@@ -29,6 +34,28 @@ export const useProductStore = defineStore("product", {
             console.log(error);
          } finally {
             
+         }
+      },
+      async getOneProduct(id){
+         try {
+            this.oneProduct.loading = true;
+            const response = await $http.get(`products/${id}`);
+            const data = response.data;
+            this.oneProduct.data = data;
+         } catch (error) {
+            this.oneProduct.error = error
+         } finally {
+            this.oneProduct.loading = false;
+         }
+      },
+      async editOneProduct(id, data){
+         try {
+            this.oneProduct.loading = true;
+            const response = await $http.patch(`products/update/${id}`, data);
+         } catch (error) {
+            this.oneProduct.error = error;
+         } finally {
+            this.oneProduct.loading = false;
          }
       }
    },

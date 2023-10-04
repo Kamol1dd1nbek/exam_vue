@@ -21,7 +21,7 @@
          <div class="row">
             <div class="col-4 offset-8">
                <div class="btn-group">
-                <button class="btn btn-warning">Edit</button>
+                <button @click="$emit('editProduct', item._id)" class="btn btn-warning">Edit</button>
                 <button class="btn btn-danger">Delete</button>
                </div>
             </div>

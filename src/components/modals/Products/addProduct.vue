@@ -1,7 +1,8 @@
 <template>
    <AppModal v-model="dialog" class="p-5">
-      <div>
-         <Form :validation-schema="add_product_schema">
+      
+          <Form :validation-schema="add_product_schema">
+            <h2 class="text-center">{{ page_title }}</h2>
             <div class="my-2">
                <Field
                   name="name"
@@ -80,7 +81,6 @@
                </div>
             </div>
          </Form>
-      </div>
    </AppModal>
 </template>
 
@@ -94,6 +94,7 @@ const productStore = useProductStore();
 import { ref } from "vue";
 const dialog = ref(false);
 const form = ref({
+   _id: "",
    name: "",
    brand: "",
    group: "",
@@ -102,21 +103,37 @@ const form = ref({
    selling_price: "",
    description: "",
 });
-
-const openModal = (item) => {
+const page_title = ref("");
+const isEdit = ref(false);
+const openModal = (item, name) => {
    if (item) {
-      form.value = item.data;
+      form.value = item.product;
+      isEdit.value = true
+    } else {
+      isEdit.value = false
+    }
+    if (name) {
+       page_title.value = name;
    }
    dialog.value = true;
 };
 
 const save = () => {
-   productStore.addProduct({
-      ...form.value,
-      price: Number(form.value.price),
-      arrival_price: Number(form.value.arrival_price),
-      selling_price: Number(form.value.selling_price),
-   });
+    if(isEdit){
+        productStore.editOneProduct(form.value._id, {
+           ...form.value,
+           price: Number(form.value.price),
+           arrival_price: Number(form.value.arrival_price),
+           selling_price: Number(form.value.selling_price),
+        });
+    } else {
+        productStore.addProduct({
+           ...form.value,
+           price: Number(form.value.price),
+           arrival_price: Number(form.value.arrival_price),
+           selling_price: Number(form.value.selling_price),
+        });
+    }
    form.value = {
       name: "",
       brand: "",
